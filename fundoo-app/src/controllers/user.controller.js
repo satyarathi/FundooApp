@@ -20,7 +20,11 @@ export const newUserRegistration = async(req, res, next) => {
             });
         })
     } catch (error) {
-        next(error);
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            data: '',
+            message: 'Registration failed'
+        });
     }
 };
 
@@ -41,6 +45,10 @@ export const userLogin = async(req, res, next) => {
             message: data.message
         });
     } catch (error) {
-        next(error);
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            data: '',
+            message: 'Login failed'
+        });
     }
 }

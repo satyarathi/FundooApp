@@ -1,6 +1,7 @@
 import User from '../models/user.model';
 import HttpStatus from 'http-status-codes';
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 //create new registration
 
@@ -12,6 +13,10 @@ export const newUser = async function(body) {
             const bcryptpassword = await bcrypt.hash(body.password, 10);
             body.password = bcryptpassword;
             const data = await User.create(body);
+
+            const token = jwt.sign({ id: data.id }, process.env.TOKEN_KEY)
+            data.token = token;
+            console.log(token);
             result = {
                 code: HttpStatus.CREATED,
                 data: data,
@@ -25,8 +30,13 @@ export const newUser = async function(body) {
             }
         }
         return result;
+
     } catch (error) {
-        console.log(error);
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            data: '',
+            message: 'Error while Registration'
+        });
     }
 };
 
@@ -36,6 +46,9 @@ export const login = async function(body) {
     if (data) {
         const checkPassword = await bcrypt.compare(body.password, data.password);
         if (checkPassword) {
+            const token = jwt.sign({ id: data.id }, process.env.TOKEN_KEY)
+            data.token = token;
+            console.log(token);
             result = {
                 code: HttpStatus.CREATED,
                 data: data,

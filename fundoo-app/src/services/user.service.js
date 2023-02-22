@@ -6,38 +6,25 @@ const jwt = require('jsonwebtoken');
 //create new registration
 
 export const newUser = async function(body) {
-    try {
-        var result;
-        const userExist = await User.findOne({ email: body.email })
-        if (userExist == null) {
-            const bcryptpassword = await bcrypt.hash(body.password, 10);
-            body.password = bcryptpassword;
-            const data = await User.create(body);
-
-            const token = jwt.sign({ id: data.id }, process.env.TOKEN_KEY)
-            data.token = token;
-            console.log(token);
-            result = {
-                code: HttpStatus.CREATED,
-                data: data,
-                message: 'New User registered successfully'
-            }
-        } else {
-            result = {
-                code: HttpStatus.BAD_REQUEST,
-                data: "Registration failed",
-                message: "User already exist"
-            }
+    var result;
+    const userExist = await User.findOne({ email: body.email })
+    if (userExist == null) {
+        const bcryptpassword = await bcrypt.hash(body.password, 10);
+        body.password = bcryptpassword;
+        const data = await User.create(body);
+        result = {
+            code: HttpStatus.CREATED,
+            data: data,
+            message: 'New User registered successfully'
         }
-        return result;
-
-    } catch (error) {
-        res.status(HttpStatus.BAD_REQUEST).json({
+    } else {
+        result = {
             code: HttpStatus.BAD_REQUEST,
-            data: '',
-            message: 'Error while Registration'
-        });
+            data: "Registration failed",
+            message: "User already exist"
+        }
     }
+    return result;
 };
 
 export const login = async function(body) {

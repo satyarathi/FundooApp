@@ -1,6 +1,9 @@
 import { Schema, model } from 'mongoose';
 
 const noteSchema = new Schema({
+    userId: {
+        type: String
+    },
     title: {
         type: String
     },
@@ -9,7 +12,15 @@ const noteSchema = new Schema({
     },
     color: {
         type: String
-    }
+    },
+    archive: {
+        type: Boolean,
+        default: false
+    },
+    trash: {
+        type: Boolean,
+        default: false
+    },
 }, {
     timestamps: true
 });

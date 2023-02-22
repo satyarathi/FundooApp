@@ -30,9 +30,9 @@ export const getAllNote = async(req, res, next) => {
  * @param {object} res - response object
  * @param {Function} next
  */
-export const getNoteById = async(req, res, next) => {
+export const getNoteById = async(req, res) => {
     try {
-        const data = await NoteService.getNoteById(req.params._id);
+        const data = await NoteService.getNoteById(req.params._id, req.body.userId);
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             data: data,
@@ -41,7 +41,7 @@ export const getNoteById = async(req, res, next) => {
     } catch (error) {
         res.status(HttpStatus.BAD_REQUEST).json({
             code: HttpStatus.BAD_REQUEST,
-            data: '',
+            data: 'Error',
             message: 'NO such notes exist '
         });
     }
@@ -53,19 +53,21 @@ export const getNoteById = async(req, res, next) => {
  * @param {object} res - response object
  * @param {Function} next
  */
-export const createNote = async(req, res, next) => {
+export const createNote = async(req, res) => {
     try {
+        console.log("Body will be here", req.body);
         const data = await NoteService.createNote(req.body);
+
         res.status(HttpStatus.CREATED).json({
             code: HttpStatus.CREATED,
             data: data,
-            message: 'Note created successfully'
+            message: "New note created successfully"
         });
     } catch (error) {
         res.status(HttpStatus.BAD_REQUEST).json({
             code: HttpStatus.BAD_REQUEST,
             data: '',
-            message: 'Notes cannot be created '
+            message: 'Failed to create note'
         });
     }
 };
@@ -76,9 +78,10 @@ export const createNote = async(req, res, next) => {
  * @param {object} res - response object
  * @param {Function} next
  */
-export const updateNote = async(req, res, next) => {
+export const updateNote = async(req, res) => {
     try {
-        const data = await NoteService.updateNote(req.params._id, req.body);
+        const data = await NoteService.updateNote(req.params._id, req.body, req.body.userId);
+        console.log(data);
         res.status(HttpStatus.ACCEPTED).json({
             code: HttpStatus.ACCEPTED,
             data: data,
@@ -99,9 +102,9 @@ export const updateNote = async(req, res, next) => {
  * @param {object} res - response object
  * @param {Function} next
  */
-export const deleteNote = async(req, res, next) => {
+export const deleteNote = async(req, res) => {
     try {
-        await NoteService.deleteNote(req.params._id);
+        await NoteService.deleteNote(req.params._id, req.body.userId);
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             data: [],
@@ -110,8 +113,52 @@ export const deleteNote = async(req, res, next) => {
     } catch (error) {
         res.status(HttpStatus.BAD_REQUEST).json({
             code: HttpStatus.BAD_REQUEST,
-            data: '',
-            message: 'Deletion failed'
+            data: 'Deletion failed',
+            message: 'Could not find note'
+        });
+    }
+};
+
+/**
+ * Controller to archieve a note
+ * @param  {object} req - request object
+ * @param {object} res - response object
+ * @param {Function} next
+ */
+export const archiveNote = async(req, res) => {
+    try {
+        const data = await NoteService.archiveNote(req.params._id, req.body.userId);
+        res.status(HttpStatus.ACCEPTED).json({
+            code: HttpStatus.ACCEPTED,
+            data: data,
+            message: 'Note archived successfully'
+        });
+    } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            message: 'Error while Archiving'
+        });
+    }
+};
+
+/**
+ * Controller to trash note a note
+ * @param  {object} req - request object
+ * @param {object} res - response object
+ * @param {Function} next
+ */
+export const trashNote = async(req, res) => {
+    try {
+        const data = await NoteService.trashNote(req.params._id, req.body.userId);
+        res.status(HttpStatus.ACCEPTED).json({
+            code: HttpStatus.ACCEPTED,
+            data: data,
+            message: 'note trashed successfully'
+        });
+    } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            message: 'Error while note is trashed'
         });
     }
 };

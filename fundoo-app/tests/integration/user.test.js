@@ -40,6 +40,46 @@ describe('User APIs Test', () => {
                 });
         });
 
+        it('should return invalid firstName', (done) => {
+            let userDetails = { "firstName": "J", "lastName": "Satyarathi", "email": "jitendra@gmail.com", "password": "Why5hould1te11" }
+            request(app)
+                .post('/api/v1/users/register')
+                .send(userDetails)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(500);
+                    done();
+                })
+        })
+        it('should return invalid lastName', (done) => {
+            let userDetails = { "firstName": "Jitendra", "lastName": "S", "email": "jitendra@gmail.com", "password": "Why5hould1te11" }
+            request(app)
+                .post('/api/v1/users/register')
+                .send(userDetails)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(500);
+                    done();
+                })
+        })
+        it('should return invalid email id', (done) => {
+            let userDetails = { "firstName": "Jitendra", "lastName": "Satyarathi", "email": "Jitendragmail.com", "password": "Why5hould1te11" }
+            request(app)
+                .post('/api/v1/users/register')
+                .send(userDetails)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(500);
+                    done();
+                })
+        })
+        it('should return invalid password', (done) => {
+            let userDetails = { "firstName": "Jitendra", "lastName": "Satyarathi", "email": "jitendra@gmail.com", "password": "Why" }
+            request(app)
+                .post('/api/v1/users/register')
+                .send(userDetails)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(500);
+                    done();
+                })
+        })
     });
 
 });

@@ -13,7 +13,7 @@ import * as UserService from '../services/user.service';
 export const newUserRegistration = async(req, res, next) => {
     try {
         UserService.newUser(req.body).then((data) => {
-            res.status(data.code).json({
+            res.status(HttpStatus.CREATED).json({
                 code: data.code,
                 data: data.data,
                 message: data.message
@@ -39,7 +39,7 @@ export const newUserRegistration = async(req, res, next) => {
 export const userLogin = async(req, res, next) => {
     try {
         const data = await UserService.login(req.body);
-        res.status(HttpStatus.CREATED, ).json({
+        res.status(HttpStatus.CREATED).json({
             code: HttpStatus.CREATED,
             data: data.data,
             message: data.message

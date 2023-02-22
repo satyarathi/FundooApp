@@ -1,9 +1,8 @@
 import Note from '../models/note.model';
-import User from '../models/note.model';
 
 //get all note
-export const getAllNote = async(userId) => {
-    const data = await Note.find(userId);
+export const getAllNote = async() => {
+    const data = await Note.find();
     return data;
 };
 
@@ -14,52 +13,54 @@ export const createNote = async(body) => {
 };
 
 //update single note
-export const updateNote = async(_id, body, userId) => {
-    const data = await Note.dataByIdAndUpdate(_id, body, userId)
+export const updateNote = async(id, body) => {
+    const data = await Note.findByIdAndUpdate(id, body, {
+        new: true
+    })
     return data;
 }
 
 
 
 //delete single note
-export const deleteNote = async(_id, userId) => {
-    await Note.findByIdAndDelete(_id, userId);
+export const deleteNote = async(_id) => {
+    await Note.findByIdAndDelete(_id);
     return '';
 };
 
 //get single note
-export const getNoteById = async(_id, userId) => {
-    const data = await Note.findById(_id, userId);
+export const getNoteById = async(_id) => {
+    const data = await Note.findById(_id);
+    console.log(data);
     return data;
 };
 
-export const archiveNote = async(id) => {
-    const data = await Note.findById(id);
+export const archiveNote = async(_id) => {
+    const data = await Note.findById(_id);
     if (data != null) {
         const isArchived = data.archive === false ? true : false;
-        const newUser = {
+        const newNote = {
             title: data.title,
             description: data.description,
             color: data.color,
             archive: isArchived,
         };
-        const find = await Note.findByIdAndUpdate(id, newUser)
+        const find = await updateNote(_id, newNote)
         return find;
     }
-
 };
 
-export const trashNote = async(id) => {
-    const data = await Note.findById(id)
+export const trashNote = async(_id) => {
+    const data = await Note.findById(_id)
     if (data != null) {
         const isTrashed = data.archive === false ? true : false;
-        const newUser = {
+        const newNote = {
             title: data.title,
             description: data.description,
             color: data.color,
             trash: isTrashed
         };
-        const result = await Note.findByIdAndUpdate(id, newUser)
+        const result = await updateNote(_id, newNote)
         return result;
     }
 };

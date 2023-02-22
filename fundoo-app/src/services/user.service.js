@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 //create new registration
 
 export const newUser = async function(body) {
-
     var result;
     const userExist = await User.findOne({ email: body.email })
     if (userExist == null) {

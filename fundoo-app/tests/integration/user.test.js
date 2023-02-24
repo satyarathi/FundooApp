@@ -120,5 +120,139 @@ describe('User APIs Test', () => {
         })
     })
 
+    // Test case for creating note
+    var id;
+    describe('Create Note', () => {
+        let createNote = {
+            "title": "Health checkup",
+            "description": "Go to clinic",
+        }
+        it('note created sucessfully', (done) => {
+            request(app)
+                .post('/api/v1/notes/create')
+                .set('Authorization', 'Bearer ' + token)
+                .send(createNote)
+                .end((err, res) => {
+                    id = res.body.data._id;
+                    console.log("get token", token);
+                    expect(res.statusCode).to.be.equal(201);
+                    done();
+                });
+        });
 
+        //Test case for Validating title
+        it('Must provide title', (done) => {
+            let createNote = {
+                "title": "",
+                "description": "Go to clinic"
+            }
+            request(app)
+                .post('/api/v1/notes/create')
+                .set('Authorization', 'Bearer ' + token)
+                .send(createNote)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(500);
+                    done();
+                });
+        });
+
+        //Test case for Validating description
+        it('Must provide description', (done) => {
+            let createNote = {
+                "title": "Health checkup",
+                "description": ""
+            }
+            request(app)
+                .post('/api/v1/notes/create')
+                .set('Authorization', 'Bearer ' + token)
+                .send(createNote)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(500);
+                    done();
+                });
+        });
+
+        //Test case for getting All note
+        it('All note of User', (done) => {
+            request(app)
+                .get('/api/v1/notes/get')
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(200);
+                    done();
+                });
+        });
+
+        //Test case for getting note by id
+        it('get note of single User', (done) => {
+            request(app)
+                .get(`/api/v1/notes/${id}`)
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(200);
+                    done();
+                });
+        });
+
+        //Test case for updating note by id
+        it('Update note of single User', (done) => {
+            let updateNote = {
+                "title": "Health checkup",
+                "description": "Cancle"
+            }
+            request(app)
+                .get(`/api/v1/notes/${id}`)
+                .set('Authorization', 'Bearer ' + token)
+                .send(updateNote)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(200);
+                    done();
+                });
+        });
+
+        //Test case for archiving note by id
+        it('Archieve note of single noteId', (done) => {
+            let updateNote = {
+                "title": "Health checkup",
+                "description": "Cancle",
+            }
+            request(app)
+                .put(`/api/v1/notes/archive/${id}`)
+                .set('Authorization', 'Bearer ' + token)
+                .send(updateNote)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(202);
+                    done();
+                });
+        });
+
+        //Test case for trashing note by id
+        it('Trash note of single noteid', (done) => {
+            let updateNote = {
+                "title": "Health checkup",
+                "description": "Cancle",
+            }
+            request(app)
+                .put(`/api/v1/notes/trash/${id}`)
+                .set('Authorization', 'Bearer ' + token)
+                .send(updateNote)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(202);
+                    done();
+                });
+        });
+
+        //Test case for deleting note by id
+        it('Delete note by Id', (done) => {
+            request(app)
+                .delete(`/api/v1/notes/${id}`)
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    expect(res.statusCode).to.be.equal(200);
+                    done();
+                });
+        });
+
+
+    });
 });

@@ -39,8 +39,8 @@ export const newUserRegistration = async(req, res, next) => {
 export const userLogin = async(req, res, next) => {
     try {
         const data = await UserService.login(req.body);
-        res.status(HttpStatus.CREATED).json({
-            code: HttpStatus.CREATED,
+        res.status(data.code).json({
+            code: data.code,
             data: data.data,
             message: data.message
         });

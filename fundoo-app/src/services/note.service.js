@@ -20,8 +20,6 @@ export const updateNote = async(id, body) => {
     return data;
 }
 
-
-
 //delete single note
 export const deleteNote = async(_id) => {
     await Note.findByIdAndDelete(_id);
@@ -31,6 +29,15 @@ export const deleteNote = async(_id) => {
 //get single note
 export const getNoteById = async(_id) => {
     const data = await Note.findById(_id);
+    return data;
+};
+
+//archive the note
+export const archiveNote = async(id) => {
+    const data = await Note.findById(id);
+    if (data != null) {
+        const isArchived = data.archive === false ? true : false;
+        const newUser = {
     console.log(data);
     return data;
 };
@@ -40,11 +47,26 @@ export const archiveNote = async(_id) => {
     if (data != null) {
         const isArchived = data.archive === false ? true : false;
         const newNote = {
+
             title: data.title,
             description: data.description,
             color: data.color,
             archive: isArchived,
         };
+
+        const find = await Note.findByIdAndUpdate(id, newUser)
+        return find;
+    }
+
+};
+
+//trash the note
+export const trashNote = async(id) => {
+    const data = await Note.findById(id)
+    if (data != null) {
+        const isTrashed = data.archive === false ? true : false;
+        const newUser = {
+=======
         const find = await updateNote(_id, newNote)
         return find;
     }
@@ -60,7 +82,11 @@ export const trashNote = async(_id) => {
             color: data.color,
             trash: isTrashed
         };
+
+        const result = await Note.findByIdAndUpdate(id, newUser)
+
         const result = await updateNote(_id, newNote)
+
         return result;
     }
 };

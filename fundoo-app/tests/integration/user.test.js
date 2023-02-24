@@ -6,6 +6,7 @@ import app from '../../src/index';
 
 describe('User APIs Test', () => {
     var token;
+
     before((done) => {
         const clearCollections = () => {
             for (const collection in mongoose.connection.collections) {
@@ -30,7 +31,9 @@ describe('User APIs Test', () => {
     //test case for Registration
     describe('Register /users', () => {
         it('should return user', (done) => {
+
             let userDetails = { "firstName": "Jitendra", "lastName": "Satyarathi", "email": "jitendra123@gmail.com", "password": "Why5hould1te11" }
+
 
             request(app)
                 .post('/api/v1/users/register')
@@ -119,6 +122,5 @@ describe('User APIs Test', () => {
                 })
         })
     })
-
 
 });

@@ -1,6 +1,7 @@
 import User from '../models/user.model';
 import HttpStatus from 'http-status-codes';
 const bcrypt = require('bcrypt');
+import jwt from "jsonwebtoken";
 
 //create new registration
 
@@ -33,13 +34,18 @@ export const newUser = async function(body) {
 export const login = async function(body) {
     var result;
     const data = await User.findOne({ email: body.email })
+    console.log(data);
     if (data) {
         const checkPassword = await bcrypt.compare(body.password, data.password);
+        console.log(checkPassword);
         if (checkPassword) {
+            var token = jwt.sign({ id: data.id }, process.env.TOKEN_KEY)
+            data.token = token;
+            console.log("creating the token", token);
             result = {
                 code: HttpStatus.CREATED,
                 data: data,
-                message: 'Loggin successfully'
+                message: 'Login successfull'
             }
         } else {
             result = {

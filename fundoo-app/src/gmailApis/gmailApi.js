@@ -14,7 +14,7 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-async function sendMail() {
+export async function sendMail(email) {
     try {
         const accessToken = await oAuth2Client.getAccessToken();
 
@@ -32,10 +32,10 @@ async function sendMail() {
 
         const mailOptions = {
             from: 'Jitendra Satyarathi <jitendrasatyarathi@gmail.com>',
-            to: 'jitendrasatyarathi@gmail.com',
+            to: "jitendrasatyarathi@gmail.com",
             subject: 'Hello from gmail using API',
-            text: 'Hello from gmail email using API',
-            html: '<h1>Hello from gmail email using API</h1>',
+            text: 'To resetpassword',
+            html: `<h1>Hello from gmail email using API, <a href = "http://localhost:3000/api/v1/users/reset"><a/></h1>`,
         };
 
         const result = await transport.sendMail(mailOptions);

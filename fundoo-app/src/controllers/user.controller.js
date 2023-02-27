@@ -14,13 +14,17 @@ export const newUserRegistration = async(req, res, next) => {
     try {
         UserService.newUser(req.body).then((data) => {
             res.status(HttpStatus.CREATED).json({
-                code: HttpStatus.CREATED,
+                code: data.code,
                 data: data.data,
                 message: data.message
             });
         })
     } catch (error) {
-        next(error);
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            data: '',
+            message: 'Registration failed'
+        });
     }
 };
 
@@ -41,7 +45,11 @@ export const userLogin = async(req, res, next) => {
             message: data.message
         });
     } catch (error) {
-        next(error);
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            data: '',
+            message: 'Login failed'
+        });
     }
 }
 

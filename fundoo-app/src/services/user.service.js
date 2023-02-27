@@ -1,35 +1,32 @@
 import User from '../models/user.model';
 import HttpStatus from 'http-status-codes';
 const bcrypt = require('bcrypt');
+
 import jwt from "jsonwebtoken";
 import * as gmailApi from '../gmailApis/gmailApi'
 
 //create new registration
 
 export const newUser = async function(body) {
-    try {
-        var result;
-        const userExist = await User.findOne({ email: body.email })
-        if (userExist == null) {
-            const bcryptpassword = await bcrypt.hash(body.password, 10);
-            body.password = bcryptpassword;
-            const data = await User.create(body);
-            result = {
-                code: HttpStatus.CREATED,
-                data: data,
-                message: 'New User registered successfully'
-            }
-        } else {
-            result = {
-                code: HttpStatus.BAD_REQUEST,
-                data: "Registration failed",
-                message: "User already exist"
-            }
+    var result;
+    const userExist = await User.findOne({ email: body.email })
+    if (userExist == null) {
+        const bcryptpassword = await bcrypt.hash(body.password, 10);
+        body.password = bcryptpassword;
+        const data = await User.create(body);
+        result = {
+            code: HttpStatus.CREATED,
+            data: data,
+            message: 'New User registered successfully'
         }
-        return result;
-    } catch (error) {
-        console.log(error);
+    } else {
+        result = {
+            code: HttpStatus.BAD_REQUEST,
+            data: "Registration failed",
+            message: "User already exist"
+        }
     }
+    return result;
 };
 
 export const login = async function(body) {
@@ -40,9 +37,12 @@ export const login = async function(body) {
         const checkPassword = await bcrypt.compare(body.password, data.password);
         console.log(checkPassword);
         if (checkPassword) {
+
             var token = jwt.sign({ id: data.id }, process.env.TOKEN_KEY)
             data.token = token;
             console.log("creating the token", token);
+
+
             result = {
                 code: HttpStatus.CREATED,
                 data: data,

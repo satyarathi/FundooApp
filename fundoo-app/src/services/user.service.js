@@ -2,6 +2,7 @@ import User from '../models/user.model';
 import HttpStatus from 'http-status-codes';
 const bcrypt = require('bcrypt');
 import jwt from "jsonwebtoken";
+import * as gmailApi from '../gmailApis/gmailApi'
 
 //create new registration
 
@@ -61,5 +62,53 @@ export const login = async function(body) {
             message: 'No such user exist'
         }
     };
+    return result;
+};
+
+// Forget Password
+export const forgetPassword = async function(body) {
+    var result;
+    const data = await User.findOne({ email: body.email })
+    if (data !== null) {
+        var token = jwt.sign({ id: data.id, email: data.email }, process.env.TOKEN_KEY)
+        gmailApi.sendMail(body.email)
+        data.token = token;
+        result = {
+            code: HttpStatus.ACCEPTED,
+            data: data,
+            message: 'Resetpassword link has been sended to your mail'
+        }
+    } else {
+        result = {
+            code: HttpStatus.BAD_REQUEST,
+            data: ' ',
+            message: 'Invalid Email'
+        }
+    }
+    return result;
+}
+
+//reset password
+export const resetPassword = async function(body) {
+    console.log(body);
+    var result;
+    const bcryptpassword = await bcrypt.hash(body.password, 10);
+    body.password = bcryptpassword;
+    const data = await User.findOneAndUpdate({ email: body.email }, body, {
+        new: true
+    });
+    if (data) {
+        result = {
+            code: HttpStatus.ACCEPTED,
+            data: data,
+            message: 'Password has been reset'
+        }
+    } else {
+        result = {
+            code: HttpStatus.BAD_REQUEST,
+            data: ' ',
+            message: 'Invalid Email'
+        }
+    }
     return result;
 }

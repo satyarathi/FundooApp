@@ -44,3 +44,44 @@ export const userLogin = async(req, res, next) => {
         next(error);
     }
 }
+
+/**
+/**
+ * Controller to login
+ * @param  {object} req - request object
+ * @param {object} res - response object
+ * @param {Function} next
+ */
+export const forgetPassword = async(req, res, next) => {
+    try {
+        const data = await UserService.forgetPassword(req.body);
+        res.status(data.code).json({
+            code: data.code,
+            data: data.data,
+            message: data.message
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+/**
+/**
+ * Controller to login
+ * @param  {object} req - request object
+ * @param {object} res - response object
+ * @param {Function} next
+ */
+export const resetPassword = async(req, res, next) => {
+    try {
+        console.log("show body", req.body);
+        const data = await UserService.resetPassword(req.body);
+        res.status(data.code).json({
+            code: data.code,
+            data: data.data,
+            message: data.message
+        })
+    } catch (error) {
+        next(error)
+    }
+};

@@ -32,7 +32,7 @@ export async function sendMail(email) {
 
         const mailOptions = {
             from: 'Jitendra Satyarathi <jitendrasatyarathi@gmail.com>',
-            to: "jitendrasatyarathi@gmail.com",
+            to: "gmail@gmail.com",
             subject: 'Hello from gmail using API',
             text: 'To resetpassword',
             html: `<h1>Hello from gmail email using API, <a href = "http://localhost:3000/api/v1/users/reset"><a/></h1>`,
@@ -45,6 +45,6 @@ export async function sendMail(email) {
     }
 }
 
-sendMail()
-    .then((result) => console.log('Email sent...', result))
-    .catch((error) => console.log(error.message));
+// sendMail()
+//     .then((result) => console.log('Email sent...', result))
+//     .catch((error) => console.log(error.message));

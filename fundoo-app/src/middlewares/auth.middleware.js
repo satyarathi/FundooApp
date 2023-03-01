@@ -42,7 +42,7 @@ export const emailAuth = async(req, res, next) => {
 
         const user = jwt.verify(bearerToken, process.env.TOKEN_KEY);
         console.log("user is here", user);
-        req.body.email = user.emailId;
+        req.body.emailId = user.email;
 
         next();
     } catch (error) {

@@ -41,11 +41,14 @@ export const login = async function(body) {
         console.log(checkPassword);
         if (checkPassword) {
             var token = jwt.sign({ id: data.id }, process.env.TOKEN_KEY)
-            data.token = token;
+            const responseData = {
+                user: data,
+                Auth: token
+            }
             console.log("creating the token", token);
             result = {
                 code: HttpStatus.CREATED,
-                data: data,
+                data: responseData,
                 message: 'Login successfull'
             }
         } else {
@@ -72,10 +75,13 @@ export const forgetPassword = async function(body) {
     if (data !== null) {
         var token = jwt.sign({ id: data.id, email: data.email }, process.env.TOKEN_KEY)
         gmailApi.sendMail(body.email)
-        data.token = token;
+        const responseData = {
+            user: data,
+            Auth: token
+        }
         result = {
             code: HttpStatus.ACCEPTED,
-            data: data,
+            data: responseData,
             message: 'Resetpassword link has been sended to your mail'
         }
     } else {

@@ -1,40 +1,45 @@
 import Note from '../models/note.model';
+import { client } from '../config/redis';
 
 //get all note
-export const getAllNote = async() => {
-    const data = await Note.find();
+export const getAllNote = async(userId) => {
+    const data = await Note.find({userId: userId});
+    await client.set('getall', JSON.stringify(data))
     return data;
 };
 
 //create new note
-export const createNote = async(body) => {
+export const createNote = async (body) => {
+    await client.del('getall');
+    console.log("get del",await client.del('getall'));
     const data = await Note.create(body);
     return data;
-};
+  };
 
 //update single note
-export const updateNote = async(id, body) => {
-    const data = await Note.findByIdAndUpdate(id, body, {
+export const updateNote = async(id, body, userId) => {
+    const data = await Note.findByIdAndUpdate({id: id,
+    userId: userId}, body, {
         new: true
     })
     return data;
 }
 
 //delete single note
-export const deleteNote = async(_id) => {
-    await Note.findByIdAndDelete(_id);
+export const deleteNote = async(_id, userId) => {
+    await Note.findByIdAndDelete({id: _id, userId: userId});
     return '';
 };
 
 //get single note
-export const getNoteById = async(_id) => {
-    const data = await Note.findById(_id);
+export const getNoteById = async(_id, userId) => {
+    const data = await Note.findById({id: _id, userId: userId});
     return data;
 };
 
 //archive the note
-export const archiveNote = async(id) => {
-    const data = await Note.findById(id);
+export const archiveNote = async(id, userId) => {
+    const data = await Note.findOne({id: _id, userId: userId});
     if (data != null) {
         const isArchived = data.archive === false ? true : false;
         const newUser = {
@@ -61,8 +66,8 @@ export const archiveNote = async(_id) => {
 };
 
 //trash the note
-export const trashNote = async(id) => {
-    const data = await Note.findById(id)
+export const trashNote = async(id, userId) => {
+    const data = await Note.findOne({id: _id, userId: userId})
     if (data != null) {
         const isTrashed = data.archive === false ? true : false;
         const newUser = {

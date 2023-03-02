@@ -9,7 +9,7 @@ import * as NoteService from '../services/note.service';
  */
 export const getAllNote = async(req, res, next) => {
     try {
-        const data = await NoteService.getAllNote();
+        const data = await NoteService.getAllNote(req.body.userId);
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             data: data,
@@ -56,9 +56,9 @@ export const getNoteById = async(req, res) => {
  */
 export const createNote = async(req, res) => {
     try {
-        console.log("Body will be here", req.body);
+       
         const data = await NoteService.createNote(req.body);
-
+        
         res.status(HttpStatus.CREATED).json({
             code: HttpStatus.CREATED,
             data: data,

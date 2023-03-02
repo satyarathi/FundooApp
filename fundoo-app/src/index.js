@@ -8,15 +8,16 @@ import helmet from 'helmet';
 import routes from './routes';
 import database from './config/database';
 import {
-    appErrorHandler,
-    genericErrorHandler,
-    notFound
+  appErrorHandler,
+  genericErrorHandler,
+  notFound
 } from './middlewares/error.middleware';
 import logger, { logStream } from './config/logger';
 
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../src/swagger/swagger.json';
+import redis from './config/redis';
 
 const app = express();
 const host = process.env.APP_HOST;
@@ -31,6 +32,7 @@ app.use(morgan('combined', { stream: logStream }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 database();
+redis();
 
 app.use(`/api/${api_version}`, routes());
 app.use(appErrorHandler);

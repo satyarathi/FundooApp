@@ -1,13 +1,14 @@
 import User from '../models/user.model';
 import HttpStatus from 'http-status-codes';
 const bcrypt = require('bcrypt');
+
 import jwt from "jsonwebtoken";
 import * as gmailApi from '../util/gmailApi'
 
 //create new registration
 
 export const newUser = async function(body) {
-   
+
         const userExist = await User.findOne({ email: body.email })
         if (userExist == null) {
             const bcryptpassword = await bcrypt.hash(body.password, 10);
@@ -17,6 +18,7 @@ export const newUser = async function(body) {
         };
     }
 
+
 export const login = async function(body) {
     const data = await User.findOne({ email: body.email });
     console.log(data);
@@ -24,14 +26,13 @@ export const login = async function(body) {
         const checkPassword = await bcrypt.compare(body.password, data.password);
         console.log(checkPassword);
         if (checkPassword) {
+
             var token = jwt.sign({ id: data.id }, process.env.TOKEN_KEY)
             const responseData = {
                 user: data,
                 Auth: token
             }
-            console.log("creating the token", token);
           return responseData;
-        }
     }
 };
 

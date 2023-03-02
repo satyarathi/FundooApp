@@ -14,6 +14,7 @@ export const newUserRegistration = async(req, res, next) => {
     try {
         const data = await UserService.newUser(req.body);
             res.status(HttpStatus.CREATED).json({
+
                 code: HttpStatus.CREATED,
                 data: data,
                 message: 'User Registration successfully'
@@ -23,7 +24,7 @@ export const newUserRegistration = async(req, res, next) => {
             code:HttpStatus.BAD_REQUEST,
             message:`${error}`
           });
-    }
+        }
 };
 
 

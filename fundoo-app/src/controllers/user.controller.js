@@ -16,7 +16,7 @@ export const newUserRegistration = async(req, res, next) => {
             res.status(HttpStatus.CREATED).json({
                 code: HttpStatus.CREATED,
                 data: data,
-                message: 'User Registration successfully'
+                message: 'User Registered successfully'
               });   
     } catch (error) {
         res.status(HttpStatus.BAD_REQUEST).json({
@@ -63,7 +63,7 @@ export const forgetPassword = async(req, res, next) => {
         res.status(HttpStatus.CREATED).json({
             code:HttpStatus.CREATED,
             data:data,
-            message:'proceed further'
+            message:'proceed further for reset password'
           });
     } catch (error) {
         res.status(HttpStatus.BAD_REQUEST).json({

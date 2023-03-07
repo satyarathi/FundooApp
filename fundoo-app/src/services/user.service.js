@@ -1,5 +1,5 @@
 import User from '../models/user.model';
-import HttpStatus from 'http-status-codes';
+import * as rabbit from '../util/rabbitmq'
 const bcrypt = require('bcrypt');
 import jwt from "jsonwebtoken";
 import * as gmailApi from '../util/gmailApi'
@@ -13,6 +13,8 @@ export const newUser = async function(body) {
             const bcryptpassword = await bcrypt.hash(body.password, 10);
             body.password = bcryptpassword;
             const data = await User.create(body);
+            const rabbitmqData=JSON.stringify(data);
+            rabbit.producer('receive', rabbitmqData);
             return data;
         };
     }

@@ -43,45 +43,4 @@ export async function sendMail(email) {
     } catch (error) {
         return error;
     }
-}
-
-//sending mail to new user using rabbitmq
-
-export async function sendMailToUser(email, firstName, lastName){
-    try {
-        const accessToken = await oAuth2Client.getAccessToken();
-
-        const transport = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                type: 'OAuth2',
-                user: 'jitendrasatyarathi@gmail.com',
-                clientId: CLIENT_ID,
-                clientSecret: CLEINT_SECRET,
-                refreshToken: REFRESH_TOKEN,
-                accessToken: accessToken,
-            }
-        });
-
-        const mailOptions = {
-            from: 'jitendrasatyarathi@gmail.com',
-            to: email,
-            subject: 'Registration is completed',
-            text: `Hello, ${firstName, lastName}. The registration is sucessfull. Now you can login. `,
-            html: `<h1> for login, continue to this link <a href="http://localhost:3000/api/v1/users/login"></a><h1>`
-        };
-
-        const result = await transport.sendMail(mailOptions)
-        console.log("Result------------------->", result);
-        return result;
-        
-    } catch (error) {
-        
-    }
-}
-
-
-
-// sendMail()
-//     .then((result) => console.log('Email sent...', result))
-//     .catch((error) => console.log(error.message));
+};
